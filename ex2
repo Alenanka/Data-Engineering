@@ -1,0 +1,17 @@
+WITH user_yong as -- выбирем  10  айди самый молодых пользователей 
+	(with temp as  -- так как таблица версионная выбирем айди пользователей по последнему обновлению   считая эту информацию достоверной и сорртируем резульатыт по днб рождению
+			(select  user_id, 
+					birthday ,
+					row_number() over(partition by  user_id order by  updated_at desc) rnk 
+				from 
+					profiles 
+				order by 
+					birthday)
+ select user_id from temp where rnk <2 limit 10)
+select  
+	count(*)
+from 
+	likes 
+where 
+	target_type_id =1 and  
+	target_id IN ( select user_id from user_yong);   
