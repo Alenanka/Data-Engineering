@@ -1,0 +1,3 @@
+SELECT IF(
+((select count(1) from likes where user_id in (select id from users where gender =1)) >
+ (select count(1) from likes where user_id in (select  id from	users where gender =2))), 'M',"F") AS 'who likes more';
