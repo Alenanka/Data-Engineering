@@ -1,17 +1,42 @@
-with user_id_max_count_message AS (
+WITH friends AS ( 	SELECT
+		CASE 1
+			WHEN friend_id THEN user_id
+			ELSE friend_id
+		END AS friend_id
+	FROM
+		friendship
+	WHERE
+		request_type_id = 1
+		AND confirmed_at IS NOT NULL
+		AND (user_id = 1 OR friend_id = 1)
+	UNION 
+	SELECT
+		friend_id
+	FROM
+		friendship
+	WHERE
+		request_type_id = 2
+		AND user_id = 1
+		AND friend_id IN (
+			SELECT
+				user_id
+			FROM
+				friendship
+			WHERE
+				request_type_id = 2
+				AND friend_id = 1
+		)
+)
 SELECT 
-	from_user_id 
+	from_user_id as Id,
+    (select first_name from users  usr where usr.id = ms.from_user_id) as Name,
+	(select last_name from users  usr where usr.id = ms.from_user_id) as Surname,
+    Count(1)  as cout_msg
 from 
-	messages                                            
+	messages ms                                         
 where 
 	to_user_id =1 
-    and  from_user_id  IN (SELECT friend_id from  friendship WHERE user_id =1) 
+    and  from_user_id  IN (SELECT friend_id from friends)  
 group by from_user_id   
 order by  count(1) desc 
-limit 1)
-select 
-	id, last_name, first_name 
-from 
-	users 
-where  
-	id in ( select from_user_id  from user_id_max_count_message) ;
+limit 1;
