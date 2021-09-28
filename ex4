@@ -1,0 +1,36 @@
+-- активность определяем как сумму постов, .лайков и сообщений от пользователя
+
+SELECT
+	u.id ,
+	u.last_name ,
+	u.first_name ,
+	((
+	SELECT
+		count(1)
+	from
+		likes l
+	WHERE
+		l.user_id = u.id) +
+(
+	SELECT
+		count(1)
+	from
+		post p
+	WHERE
+		p.user_id = u.id) +
+		
+		(
+	SELECT
+		count(1)
+	from
+		messages m
+	WHERE
+		m.from_user_id = u.id)
+		) as cnt_all
+from
+	users u
+order by 
+	cnt_all,
+	u.last_name
+limit 10
+	;
