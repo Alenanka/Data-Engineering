@@ -1,0 +1,19 @@
+- Составьте список пользователей users, которые осуществили хотя бы один заказ orders в интернет магазине.
+-- так как используем inner join то  заказчики которые не сделали ни одного заказа сюда не попадут
+SELECT  u.id as user_id, u.name as 'Имя Заказчика', count(1) as 'Количество заказов'
+from users u  
+inner join
+orders o  on (o.user_id = u.id)
+GROUP by u.id
+ORDER BY COUNT(1) DESC ;
+
+
+
+-- Выведите список товаров products и разделов catalogs, который соответствует товару.
+-- используем left join  чтобы для товаров где не указазон раздел тоже вывелись данные
+ INSERT into products ( name, description) values ('AMD2300', 'монитор');
+
+SELECT p.id ,p.name , p.description ,p.price , c.name as 'Каталог'
+from products p 
+left join 
+catalogs c on (p.catalog_id=c.id);
