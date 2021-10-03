@@ -1,0 +1,6 @@
+-- 10 самых молодых юзеров
+SELECT CONCAT(firstname, " ", lastname) as user, TIMESTAMPDIFF(YEAR, birthday, NOW()) as age 
+  FROM users as u
+    JOIN profiles as p
+      ON u.id = p.user_id
+        ORDER BY age LIMIT 10;
