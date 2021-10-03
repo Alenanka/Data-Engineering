@@ -17,3 +17,48 @@ SELECT p.id ,p.name , p.description ,p.price , c.name as 'Каталог'
 from products p 
 left join 
 catalogs c on (p.catalog_id=c.id);
+
+
+-- Пусть имеется таблица рейсов flights (id, from, to) и таблица городов cities (label, name). Поля from, to и label содержат
+--  английские названия городов, поле name — русское. Выведите список рейсов flights с русскими названиями городов
+drop table if exists flight;
+create table flight 
+(id serial PRIMARY KEY,
+ from_city varchar(255),
+to_city varchar (255));
+
+drop table if exists cities;
+CREATE table cities (
+label varchar(255) not null,
+name varchar(255)not null
+);
+
+INSERT INTO flight ( from_city, to_city ) VALUES 
+( 'moscow', 'paris'),
+( 'moscow', 'rim'),
+( 'minsk', 'moscow'),
+( 'rim', 'berlin'),
+( 'rim', 'paris'),
+( 'hurgada', 'moscow'),
+( 'moscow', 'budapest');
+SELECT * from flight;
+
+INSERT into cities (label, name) VALUES
+('moscow', 'Москва'),
+('paris', 'Париж'),
+('rim', 'Рим'),
+('berlin', 'Берлин'),
+('hurgada', 'Хургада'),
+('budapest', 'Будапешт');
+iNSERT into cities (label, name) VALUES
+('minsk', 'Минск');
+SELECT * from cities;
+
+iNSERT into cities (label, name) VALUES
+('minsk', 'Минск');
+
+
+SELECT f.id,c1.name as 'Откуда' ,c2.name as 'Куда'
+from flight f
+left join cities c1  on (f.from_city = c1.label)
+left join cities c2 on (f.to_city=c2.label);
